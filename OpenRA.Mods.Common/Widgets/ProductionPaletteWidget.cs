@@ -217,6 +217,24 @@ namespace OpenRA.Mods.Common.Widgets
 			}
 		}
 
+		void IssueOrderForEachSelectedQueue(ProductionItem item, ProductionIcon icon, Func<ProductionQueue, Order> orderProducer)
+		{
+			var queues = World.Selection.Actors
+				.Where(a => a.IsInWorld && a.World.LocalPlayer == a.Owner)
+				.SelectMany(a => a.TraitsImplementing<ProductionQueue>())
+				.Where(q => q.Enabled && q.BuildableItems().Any(a => a.Name == icon.Name));
+
+			if (queues.Count() == 0)
+				World.IssueOrder(orderProducer(currentQueue));
+			else
+			{
+				foreach (ProductionQueue queue in queues)
+				{
+					World.IssueOrder(orderProducer(queue));
+				}
+			}
+		}
+
 		bool HandleLeftClick(ProductionItem item, ProductionIcon icon, int handleCount)
 		{
 			if (PickUpCompletedBuildingIcon(icon, item))
@@ -229,7 +247,7 @@ namespace OpenRA.Mods.Common.Widgets
 			{
 				// Resume a paused item
 				Game.Sound.Play(SoundType.UI, TabClick);
-				World.IssueOrder(Order.PauseProduction(CurrentQueue.Actor, icon.Name, false));
+				IssueOrderForEachSelectedQueue(item, icon, queue => Order.PauseProduction(queue.Actor, icon.Name, false));
 				return true;
 			}
 
@@ -238,7 +256,8 @@ namespace OpenRA.Mods.Common.Widgets
 				// Queue a new item
 				Game.Sound.Play(SoundType.UI, TabClick);
 				Game.Sound.PlayNotification(World.Map.Rules, World.LocalPlayer, "Speech", CurrentQueue.Info.QueuedAudio, World.LocalPlayer.Faction.InternalName);
-				World.IssueOrder(Order.StartProduction(CurrentQueue.Actor, icon.Name, handleCount));
+				IssueOrderForEachSelectedQueue(item, icon, queue => Order.StartProduction(queue.Actor, icon.Name, handleCount));
+
 				return true;
 			}
 
@@ -256,13 +275,13 @@ namespace OpenRA.Mods.Common.Widgets
 			{
 				// Instant cancel of things we have not started yet and things that are finished
 				Game.Sound.PlayNotification(World.Map.Rules, World.LocalPlayer, "Speech", CurrentQueue.Info.CancelledAudio, World.LocalPlayer.Faction.InternalName);
-				World.IssueOrder(Order.CancelProduction(CurrentQueue.Actor, icon.Name, handleCount));
+				IssueOrderForEachSelectedQueue(item, icon, queue => Order.CancelProduction(queue.Actor, icon.Name, handleCount));
 			}
 			else
 			{
 				// Pause an existing item
 				Game.Sound.PlayNotification(World.Map.Rules, World.LocalPlayer, "Speech", CurrentQueue.Info.OnHoldAudio, World.LocalPlayer.Faction.InternalName);
-				World.IssueOrder(Order.PauseProduction(CurrentQueue.Actor, icon.Name, true));
+				IssueOrderForEachSelectedQueue(item, icon, queue => Order.PauseProduction(queue.Actor, icon.Name, true));
 			}
 
 			return true;
@@ -276,7 +295,7 @@ namespace OpenRA.Mods.Common.Widgets
 			// Directly cancel, skipping "on-hold"
 			Game.Sound.Play(SoundType.UI, TabClick);
 			Game.Sound.PlayNotification(World.Map.Rules, World.LocalPlayer, "Speech", CurrentQueue.Info.CancelledAudio, World.LocalPlayer.Faction.InternalName);
-			World.IssueOrder(Order.CancelProduction(CurrentQueue.Actor, icon.Name, handleCount));
+			IssueOrderForEachSelectedQueue(item, icon, queue => Order.CancelProduction(queue.Actor, icon.Name, handleCount));
 
 			return true;
 		}
