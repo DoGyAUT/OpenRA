@@ -1,0 +1,6 @@
+[submodule "OpenRA.Mods.AS"]
+	path = OpenRA.Mods.AS
+	url = https://github.com/DoGyAUT/OpenRA.Mods.AS
+[submodule "mods/cd"]
+	path = mods/cd
+	url = https://github.com/DoGyAUT/cd
