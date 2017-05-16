@@ -81,7 +81,9 @@ cp packaging/Eluant.dll.config packaging/built
 
 cd packaging
 echo "Creating package..."
-zip -qr $OUTPUTDIR/OpenRA-$TAG.zip $BUILTDIR
+pushd $BUILTDIR > /dev/null
+zip -qr $OUTPUTDIR/OpenRA-$TAG.zip *
+popd > /dev/null
 
 echo "Package build done."
 
