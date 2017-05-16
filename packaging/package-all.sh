@@ -24,17 +24,18 @@ find . -path "*.mdb" -delete
 test -e Changelog.md && rm Changelog.md
 curl -s -L -O https://raw.githubusercontent.com/wiki/OpenRA/OpenRA/Changelog.md
 
-markdown Changelog.md > CHANGELOG.html
-markdown README.md > README.html
-markdown CONTRIBUTING.md > CONTRIBUTING.html
-markdown DOCUMENTATION.md > DOCUMENTATION.html
-markdown Lua-API.md > Lua-API.html
+markdown Changelog.md > packaging/built/CHANGELOG.html
+rm Changelog.md
+markdown README.md > packaging/built/README.html
+markdown CONTRIBUTING.md > packaging/built/CONTRIBUTING.html
+markdown DOCUMENTATION.md > packaging/built/DOCUMENTATION.html
+markdown Lua-API.md > packaging/built/Lua-API.html
 
 # List of files that are packaged on all platforms
 FILES=('OpenRA.Game.exe' 'OpenRA.Game.exe.config' 'OpenRA.Utility.exe' 'OpenRA.Server.exe' 
 'OpenRA.Platforms.Default.dll' \
-'lua' 'glsl' 'mods/common' 'mods/ra' 'mods/cnc' 'mods/d2k' 'mods/modcontent' \
-'AUTHORS' 'COPYING' 'README.html' 'CONTRIBUTING.html' 'DOCUMENTATION.html' 'CHANGELOG.html' \
+'lua' 'glsl' 'mods/common' 'mods/ra' 'mods/cnc' 'mods/d2k' 'mods/modcontent' 'mods/all' 'mods/ts' 'mods/as' \
+'AUTHORS' 'COPYING' \
 'global mix database.dat' 'GeoLite2-Country.mmdb.gz')
 
 echo "Copying files..."
@@ -65,40 +66,22 @@ cp thirdparty/download/Eluant* packaging/built
 
 # GeoIP database access
 cp thirdparty/download/MaxMind.Db.dll packaging/built
-cp thirdparty/download/MaxMind.GeoIP2.dll packaging/built
-cp thirdparty/download/Newtonsoft.Json.dll packaging/built
 
 # global chat
 cp thirdparty/download/SmarIrc4net.dll packaging/built
 
-# Copy game icon for windows package
-cp packaging/windows/OpenRA.ico packaging/built
+# Windows only .dlls
+cp thirdparty/download/windows/freetype6.dll packaging/built
+cp thirdparty/download/windows/lua51.dll packaging/built
+cp thirdparty/download/windows/SDL2.dll packaging/built
+cp thirdparty/download/windows/soft_oal.dll packaging/built
+
+# Mono only files
+cp packaging/Eluant.dll.config packaging/built
 
 cd packaging
-echo "Creating packages..."
-
-pushd windows >/dev/null
-./buildpackage.sh "$TAG" "$BUILTDIR" "$SRCDIR" "$OUTPUTDIR"
-if [ $? -ne 0 ]; then
-    echo "Windows package build failed."
-fi
-popd >/dev/null
-
-pushd osx >/dev/null
-echo "Zipping OS X package"
-./buildpackage.sh "$TAG" "$BUILTDIR" "$OUTPUTDIR"
-if [ $? -ne 0 ]; then
-    echo "OS X package build failed."
-fi
-popd >/dev/null
-
-pushd linux >/dev/null
-echo "Building Linux packages"
-./buildpackage.sh "$TAG" "$BUILTDIR" "$OUTPUTDIR"
-if [ $? -ne 0 ]; then
-    echo "Linux package build failed."
-fi
-popd >/dev/null
+echo "Creating package..."
+zip -qr $OUTPUTDIR/OpenRA-$TAG.zip $BUILTDIR
 
 echo "Package build done."
 

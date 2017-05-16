@@ -60,9 +60,7 @@ deploy:
   api_key:
     secure: NrwdXHkz0lPvYoBJpIbrYzyi4ByjO0IZdwAUv7SoAkopGy3fums33o601ixX+OyFpRjFPRRSxnMUIJJDqkv7/6HZCGAgzvVkiy0nX3Bwog7W07YmpHR7FjQociQW+RK2n+wYwTeEX8ib747fkT2xzYaxnIvanSEQxSK9JKGiqvSnTdvZl6axe+sSWjyM/f3cPrgtakalxBD7BHEUEB7BwMs9UGXOiiHwPIYsOnRnDz6MhEgJ4Yx8hUy4Fh+5RJETIBIov1Uok3Tia7kfTMtbuNN+llaW/cLBjDWNt2rmjQpyQ9nwxolTAcgdCzaQIUzklX1lnbyaH6l5TaYi8SQc5FJRcYavKWFD7t5VYtx+Gbbq3jmebh84nLmlZLniBjOvxBMO2Iq6LD68jO8GuMmeNH3yBPBQ1+LHfCKS6uOFqi+QZsqJPyeU+owjTK3ltVIqWZK1Ta5LJ68hgDijvfEzSjD4XuxWpiXKPZYOomQK60aC3HONVND7Lz2UkBRcR6M0bzmxoiwrPwHN3ul4QorCgX3WlYS3G5gpuxc9FylpCSwIVe6iThvmsbNg+oVt1UgJEAwuqawwf5M0EMzHArMxU1BFJgqqY/lw1zf+O2KMWJn5d9YSD3Z3pUfZThtfALksTLGglbaEnQbUM+8VTi0iBZmzGYVkw0yqGW4nQ+jAKyA=
   file:
-    - build/OpenRA-${TRAVIS_TAG}.exe
     - build/OpenRA-${TRAVIS_TAG}.zip
-    - build/openra_${DOTVERSION}_all.deb
   skip_cleanup: true
   on:
     all_branches: true
