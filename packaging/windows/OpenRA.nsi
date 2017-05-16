@@ -83,7 +83,7 @@ Section "Game" GAME
 	File /r "${SRCDIR}\mods\cnc"
 	File /r "${SRCDIR}\mods\d2k"
 	File /r "${SRCDIR}\mods\ra"
-	File /r "${SRCDIR}\mods\modchooser"
+	File /r "${SRCDIR}\mods\modcontent"
 
 	SetOutPath "$INSTDIR"
 	File "${SRCDIR}\OpenRA.exe"
