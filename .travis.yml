@@ -44,6 +44,7 @@ after_success:
 branches:
  only:
    - /^cd-release-.*$/
+   - cd
 
 # Notify developers when build passed/failed.
 notifications:
@@ -57,7 +58,7 @@ before_deploy:
 deploy:
   provider: releases
   api_key:
-    secure: "ULWEbq6QVecDlbw9r8kTNh5Lrh8/iuvKysJOnlz61E7oArVC51fUAL8GqADUWKTTPm3qEid/hUDSMabh6LACo02dTX2kNYxiHqYLxUGg6zWm9frkmil6HEMKsY4D4x2NV0SWm8VfNfcX7z8dccPWb5A+qHdMbIR1Y9P3OxtIMN7FFVeXxuAJeALlfMoHLbaP/HuOx4Aw3qpc5cnKAz8lSompG+OG1b9obkbmXmQqCCnxeC1G+KzDyFb8PClROaNkqsWUPZWBtOt/GmByGcm6kSHpHjOU+2PHDLqx3QWnKo5cHSq6LQWSXRpzY+8y1hcRoXyYuglRIWc+0rfVhdkxnB4vuIsRk7ep/Yi39YT5kEtA+iS4FtUN2ZguHwHmJASoVEfYuPffTHRgKIapFG0rY4/Dty3epO8Al9KXmmd0SJrOQKkIokXTOTCyPKWiZNPl+OupndeEvGt0M9R4qYaS2gid2T6C+Zft087RmqLwZaUYmWN9k3XtrNbSJGdeFJYigYOWfM2T74zSK0raYouy2Um/c6eWr+uIDHrCBu3vS3IeqR34U8b04XI7Ik2bntH1McYLoz5JFpuvDAeU7kj+vbicsSVMl9c0qG1fAETkGqrZJ6/u7ED0Xw1JJ9M6lG3kIEnxpcYVqVBfN3n6c39YtRPC6sXINho4qGP31s/j7Cs="
+    secure: NrwdXHkz0lPvYoBJpIbrYzyi4ByjO0IZdwAUv7SoAkopGy3fums33o601ixX+OyFpRjFPRRSxnMUIJJDqkv7/6HZCGAgzvVkiy0nX3Bwog7W07YmpHR7FjQociQW+RK2n+wYwTeEX8ib747fkT2xzYaxnIvanSEQxSK9JKGiqvSnTdvZl6axe+sSWjyM/f3cPrgtakalxBD7BHEUEB7BwMs9UGXOiiHwPIYsOnRnDz6MhEgJ4Yx8hUy4Fh+5RJETIBIov1Uok3Tia7kfTMtbuNN+llaW/cLBjDWNt2rmjQpyQ9nwxolTAcgdCzaQIUzklX1lnbyaH6l5TaYi8SQc5FJRcYavKWFD7t5VYtx+Gbbq3jmebh84nLmlZLniBjOvxBMO2Iq6LD68jO8GuMmeNH3yBPBQ1+LHfCKS6uOFqi+QZsqJPyeU+owjTK3ltVIqWZK1Ta5LJ68hgDijvfEzSjD4XuxWpiXKPZYOomQK60aC3HONVND7Lz2UkBRcR6M0bzmxoiwrPwHN3ul4QorCgX3WlYS3G5gpuxc9FylpCSwIVe6iThvmsbNg+oVt1UgJEAwuqawwf5M0EMzHArMxU1BFJgqqY/lw1zf+O2KMWJn5d9YSD3Z3pUfZThtfALksTLGglbaEnQbUM+8VTi0iBZmzGYVkw0yqGW4nQ+jAKyA=
   file:
     - build/OpenRA-${TRAVIS_TAG}.exe
     - build/OpenRA-${TRAVIS_TAG}.zip
