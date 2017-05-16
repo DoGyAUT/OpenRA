@@ -1,5 +1,4 @@
-﻿
-#region Copyright & License Information
+﻿#region Copyright & License Information
 /*
  * Copyright 2015- OpenRA.Mods.AS Developers (see AUTHORS)
  * This file is a part of a third-party plugin for OpenRA, which is
