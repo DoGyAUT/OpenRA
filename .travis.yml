@@ -65,4 +65,4 @@ deploy:
   on:
     all_branches: true
     tags: true
-    repo: jrb0001/OpenRA
+    repo: DoGyAUT/OpenRA
