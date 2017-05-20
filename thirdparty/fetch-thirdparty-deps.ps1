@@ -94,7 +94,7 @@ if (!(Test-Path "windows/lua51.dll"))
 {
 	echo "Fetching Lua 5.1 from NuGet."
 	./nuget.exe install lua.binaries -Version 5.1.5 -ExcludeVersion -Verbosity quiet
-	cp lua.binaries/bin/win32/dll8/lua5.1.dll ./windows/lua51.dll
+	cp lua.binaries/bin/win64/dll8/lua5.1.dll ./windows/lua51.dll
 	rmdir lua.binaries -Recurse
 }
 
@@ -110,7 +110,7 @@ if (!(Test-Path "windows/soft_oal.dll"))
 {
 	echo "Fetching OpenAL Soft from NuGet."
 	./nuget.exe install OpenAL-Soft -Version 1.16.0 -ExcludeVersion -Verbosity quiet
-	cp OpenAL-Soft/bin/Win32/soft_oal.dll windows/soft_oal.dll
+	cp OpenAL-Soft/bin/Win64/soft_oal.dll windows/soft_oal.dll
 	rmdir OpenAL-Soft -Recurse
 }
 
