@@ -66,7 +66,7 @@ if (!(Test-Path "windows/SDL2.dll"))
 	echo "Fetching SDL2 from libsdl.org"
 	
 	# Download zip:
-	$zipFileName = "SDL2-2.0.5-win32-x86.zip"
+	$zipFileName = "SDL2-2.0.5-win32-x64.zip"
 	$target = Join-Path $pwd.ToString() $zipFileName
 	(New-Object System.Net.WebClient).DownloadFile("https://www.libsdl.org/release/" + $zipFileName, $target)
 	
@@ -78,7 +78,7 @@ if (!(Test-Path "windows/SDL2.dll"))
 	$destination.Copyhere($zipFile.items())
 	
 	# Remove junk files:
-	rm SDL2-2.0.5-win32-x86.zip
+	rm SDL2-2.0.5-win32-x64.zip
 	rm -path "$currentPath\windows\README-SDL.txt"
 }
 
@@ -94,7 +94,7 @@ if (!(Test-Path "windows/lua51.dll"))
 {
 	echo "Fetching Lua 5.1 from NuGet."
 	./nuget.exe install lua.binaries -Version 5.1.5 -ExcludeVersion -Verbosity quiet
-	cp lua.binaries/bin/win32/dll8/lua5.1.dll ./windows/lua51.dll
+	cp lua.binaries/bin/win64/dll8/lua5.1.dll ./windows/lua51.dll
 	rmdir lua.binaries -Recurse
 }
 
@@ -102,7 +102,7 @@ if (!(Test-Path "windows/freetype6.dll"))
 {
 	echo "Fetching FreeType2 from NuGet."
 	./nuget.exe install SharpFont.Dependencies -Version 2.6.0 -ExcludeVersion -Verbosity quiet
-	cp SharpFont.Dependencies/bin/msvc9/x86/freetype6.dll ./windows/freetype6.dll
+	cp SharpFont.Dependencies/bin/msvc9/x64/freetype6.dll ./windows/freetype6.dll
 	rmdir SharpFont.Dependencies -Recurse
 }
 
@@ -110,7 +110,7 @@ if (!(Test-Path "windows/soft_oal.dll"))
 {
 	echo "Fetching OpenAL Soft from NuGet."
 	./nuget.exe install OpenAL-Soft -Version 1.16.0 -ExcludeVersion -Verbosity quiet
-	cp OpenAL-Soft/bin/Win32/soft_oal.dll windows/soft_oal.dll
+	cp OpenAL-Soft/bin/Win64/soft_oal.dll windows/soft_oal.dll
 	rmdir OpenAL-Soft -Recurse
 }
 
@@ -133,7 +133,7 @@ if (!(Test-Path "OpenAL-CS.dll"))
 {
 	echo "Fetching OpenAL-CS from GitHub."
 	$target = Join-Path $pwd.ToString() "OpenAL-CS.dll"
-	(New-Object System.Net.WebClient).DownloadFile("https://github.com/OpenRA/OpenAL-CS/releases/download/20151227/OpenAL-CS.dll", $target)
+	(New-Object System.Net.WebClient).DownloadFile("https://github.com/jrb0001/OpenAL-CS/releases/download/20170520/OpenAL-CS.dll", $target)
 }
 
 if (!(Test-Path "Eluant.dll"))
