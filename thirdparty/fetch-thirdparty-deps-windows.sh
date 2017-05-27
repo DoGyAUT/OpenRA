@@ -1,5 +1,8 @@
 #!/bin/bash
 
+ARCH=$1
+BITS=$2
+
 # Die on any error for Travis CI to automatically retry:
 set -e
 
@@ -7,6 +10,10 @@ download_dir="${0%/*}/download/windows"
 
 mkdir -p "${download_dir}"
 cd "${download_dir}"
+
+if [ ! -d $ARCH ]; then
+	mkdir $ARCH
+fi
 
 function get()
 {
@@ -17,30 +24,31 @@ function get()
 	fi
 }
 
-if [ ! -f SDL2.dll ]; then
+if [ ! -f $ARCH/SDL2.dll ]; then
 	echo "Fetching SDL2 from libsdl.org"
-	wget https://www.libsdl.org/release/SDL2-2.0.5-win32-x64.zip
-	unzip SDL2-2.0.5-win32-x64.zip SDL2.dll
-	rm SDL2-2.0.5-win32-x64.zip
+	wget https://www.libsdl.org/release/SDL2-2.0.5-win32-$ARCH.zip
+	unzip SDL2-2.0.5-win32-$ARCH.zip SDL2.dll
+	mv SDL2.dll ./$ARCH/SDL2.dll
+	rm SDL2-2.0.5-win32-$ARCH.zip
 fi
 
-if [ ! -f freetype6.dll ]; then
+if [ ! -f $ARCH/freetype6.dll ]; then
 	echo "Fetching FreeType2 from NuGet"
 	get SharpFont.Dependencies 2.6.0
-	cp ./SharpFont.Dependencies/bin/msvc9/x64/freetype6.dll .
+	cp ./SharpFont.Dependencies/bin/msvc9/$ARCH/freetype6.dll ./$ARCH/freetype6.dll
 	rm -rf SharpFont.Dependencies
 fi
 
-if [ ! -f lua51.dll ]; then
+if [ ! -f $ARCH/lua51.dll ]; then
 	echo "Fetching Lua 5.1 from NuGet"
 	get lua.binaries 5.1.5
-	cp ./lua.binaries/bin/win64/dll8/lua5.1.dll ./lua51.dll
+	cp ./lua.binaries/bin/win$BITS/dll8/lua5.1.dll ./$ARCH/lua51.dll
 	rm -rf lua.binaries
 fi
 
-if [ ! -f soft_oal.dll ]; then
+if [ ! -f $ARCH/soft_oal.dll ]; then
 	echo "Fetching OpenAL Soft from NuGet"
 	get OpenAL-Soft 1.16.0
-	cp ./OpenAL-Soft/bin/Win64/soft_oal.dll ./soft_oal.dll
+	cp ./OpenAL-Soft/bin/Win$BITS/soft_oal.dll ./$ARCH/soft_oal.dll
 	rm -rf OpenAL-Soft
 fi

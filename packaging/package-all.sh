@@ -71,10 +71,17 @@ cp thirdparty/download/MaxMind.Db.dll packaging/built
 cp thirdparty/download/SmarIrc4net.dll packaging/built
 
 # Windows only .dlls
-cp thirdparty/download/windows/freetype6.dll packaging/built
-cp thirdparty/download/windows/lua51.dll packaging/built
-cp thirdparty/download/windows/SDL2.dll packaging/built
-cp thirdparty/download/windows/soft_oal.dll packaging/built
+mkdir packaging/built/x86
+cp thirdparty/download/windows/x86/freetype6.dll packaging/built/x86
+cp thirdparty/download/windows/x86/lua51.dll packaging/built/x86
+cp thirdparty/download/windows/x86/SDL2.dll packaging/built/x86
+cp thirdparty/download/windows/x86/soft_oal.dll packaging/built/x86
+mkdir packaging/built/x64
+cp thirdparty/download/windows/x64/freetype6.dll packaging/built/x64
+cp thirdparty/download/windows/x64/lua51.dll packaging/built/x64
+cp thirdparty/download/windows/x64/SDL2.dll packaging/built/x64
+cp thirdparty/download/windows/x64/soft_oal.dll packaging/built/x64
+
 
 # Mono only files
 cp packaging/Eluant.dll.config packaging/built

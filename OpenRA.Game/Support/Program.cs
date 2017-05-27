@@ -37,6 +37,10 @@ namespace OpenRA
 
 			try
 			{
+				if (Platform.CurrentPlatform == PlatformType.Windows){
+					Environment.SetEnvironmentVariable("PATH", (Environment.Is64BitProcess ? "x64" : "x86") + ";" + Environment.GetEnvironmentVariable("PATH"));
+				}
+
 				return (int)Run(args);
 			}
 			catch (Exception e)

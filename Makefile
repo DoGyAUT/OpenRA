@@ -312,8 +312,12 @@ linux-native-dependencies:
 	@./thirdparty/configure-native-deps.sh
 
 windows-dependencies:
-	@./thirdparty/fetch-thirdparty-deps-windows.sh
-	@ $(CP_R) thirdparty/download/windows/*.dll .
+	@./thirdparty/fetch-thirdparty-deps-windows.sh x86 32
+	@./thirdparty/fetch-thirdparty-deps-windows.sh x64 64
+	@ [ -d x86 ] || mkdir x86
+	@ [ -d x64 ] || mkdir x64
+	@ $(CP_R) thirdparty/download/windows/x86/*.dll x86
+	@ $(CP_R) thirdparty/download/windows/x64/*.dll x64
 
 osx-dependencies: cli-dependencies
 	@./thirdparty/fetch-thirdparty-deps-osx.sh
