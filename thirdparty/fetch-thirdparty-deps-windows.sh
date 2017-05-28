@@ -27,7 +27,7 @@ function get()
 if [ ! -f $ARCH/SDL2.dll ]; then
 	echo "Fetching SDL2 from libsdl.org"
 	wget https://www.libsdl.org/release/SDL2-2.0.5-win32-$ARCH.zip
-	unzip SDL2-2.0.5-win32-$ARCH.zip SDL2.dll
+	unzip -o SDL2-2.0.5-win32-$ARCH.zip SDL2.dll
 	mv SDL2.dll ./$ARCH/SDL2.dll
 	rm SDL2-2.0.5-win32-$ARCH.zip
 fi
