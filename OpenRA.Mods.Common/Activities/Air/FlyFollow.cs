@@ -42,7 +42,14 @@ namespace OpenRA.Mods.Common.Activities
 			if (IsCanceled || !target.IsValidFor(self))
 				return NextActivity;
 
-			if (target.IsInRange(self.CenterPosition, maxRange) && !target.IsInRange(self.CenterPosition, minRange))
+			if (target.IsInRange(self.CenterPosition, minRange))
+			{
+				var directVector = target.CenterPosition - self.CenterPosition;
+				Fly.FlyToward(self, plane, (directVector.Yaw + WAngle.FromDegrees(180)).Facing, plane.Info.CruiseAltitude);
+				return this;
+			}
+
+			if (target.IsInRange(self.CenterPosition, maxRange))
 			{
 				Fly.FlyToward(self, plane, plane.Facing, plane.Info.CruiseAltitude);
 				return this;
