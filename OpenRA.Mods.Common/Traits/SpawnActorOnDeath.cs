@@ -19,7 +19,7 @@ namespace OpenRA.Mods.Common.Traits
 	public enum OwnerType { Victim, Killer, InternalName }
 
 	[Desc("Spawn another actor immediately upon death.")]
-	public class SpawnActorOnDeathInfo : ITraitInfo
+	public class SpawnActorOnDeathInfo : ConditionalTraitInfo, ITraitInfo
 	{
 		[ActorReference, FieldLoader.Require]
 		[Desc("Actor to spawn on death.")]
@@ -50,16 +50,16 @@ namespace OpenRA.Mods.Common.Traits
 			"lead to unexpected behaviour.")]
 		public readonly CVec Offset = CVec.Zero;
 
-		public object Create(ActorInitializer init) { return new SpawnActorOnDeath(init, this); }
+		public override object Create(ActorInitializer init) { return new SpawnActorOnDeath(init, this); }
 	}
 
-	public class SpawnActorOnDeath : INotifyKilled
+	public class SpawnActorOnDeath : ConditionalTrait<SpawnActorOnDeathInfo>, INotifyKilled
 	{
 		readonly SpawnActorOnDeathInfo info;
 		readonly string faction;
 		readonly bool enabled;
 
-		public SpawnActorOnDeath(ActorInitializer init, SpawnActorOnDeathInfo info)
+		public SpawnActorOnDeath(ActorInitializer init, SpawnActorOnDeathInfo info) : base(info)
 		{
 			this.info = info;
 			enabled = !info.RequiresLobbyCreeps || init.Self.World.WorldActor.Trait<MapCreeps>().Enabled;
@@ -68,7 +68,7 @@ namespace OpenRA.Mods.Common.Traits
 
 		public void Killed(Actor self, AttackInfo e)
 		{
-			if (!enabled)
+			if (!enabled || IsTraitDisabled)
 				return;
 
 			if (!self.IsInWorld)
