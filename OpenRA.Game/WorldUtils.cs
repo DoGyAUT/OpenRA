@@ -43,6 +43,13 @@ namespace OpenRA
 				a => (a.CenterPosition - origin).HorizontalLengthSquared <= r.LengthSquared);
 		}
 
+		public static IEnumerable<Actor> FindActorsInSphere(this World world, WPos origin, WDist r)
+		{
+			var vec = new WVec(r, r, r);
+			return world.ActorMap.ActorsInBox(origin - vec, origin + vec).Where(
+				a => (a.CenterPosition - origin).LengthSquared <= r.LengthSquared);
+		}
+
 		public static bool ContainsTemporaryBlocker(this World world, CPos cell, Actor ignoreActor = null)
 		{
 			var temporaryBlockers = world.ActorMap.GetActorsAt(cell);

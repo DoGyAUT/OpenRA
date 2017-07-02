@@ -25,12 +25,16 @@ namespace OpenRA.Mods.Common.Warheads
 		[Desc("Duration of the condition (in ticks). Set to 0 for a permanent condition.")]
 		public readonly int Duration = 0;
 
+		[Desc("Calculate range in 3d instead of ignoring the height of potential targets.")]
+		public readonly bool RangeIn3d;
+
 		public readonly WDist Range = WDist.FromCells(1);
 
 		public override void DoImpact(Target target, Actor firedBy, IEnumerable<int> damageModifiers)
 		{
-			var actors = target.Type == TargetType.Actor ? new[] { target.Actor } :
-				firedBy.World.FindActorsInCircle(target.CenterPosition, Range);
+			var actors = target.Type == TargetType.Actor ? new[] { target.Actor } : RangeIn3d
+				? firedBy.World.FindActorsInSphere(target.CenterPosition, Range)
+				: firedBy.World.FindActorsInCircle(target.CenterPosition, Range);
 
 			foreach (var a in actors)
 			{

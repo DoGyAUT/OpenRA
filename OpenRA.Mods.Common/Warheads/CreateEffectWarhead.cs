@@ -41,6 +41,9 @@ namespace OpenRA.Mods.Common.Warheads
 		[Desc("What impact types should this effect NOT apply to.", "Overrides ValidImpactTypes.")]
 		public readonly ImpactType InvalidImpactTypes = ImpactType.None;
 
+		[Desc("Calculate the victim scan radius in 3d instead of ignoring the height of potential targets.")]
+		public readonly bool VictimScanRadiusIn3d;
+
 		[Desc("Scan radius for victims around impact. If set to zero (default), it will automatically scale to the largest health shape.",
 			"Custom overrides should not be necessary under normal circumstances.")]
 		public WDist VictimScanRadius = WDist.Zero;
@@ -84,7 +87,11 @@ namespace OpenRA.Mods.Common.Warheads
 
 		public bool GetDirectHit(World world, CPos cell, WPos pos, Actor firedBy, bool checkTargetType = false)
 		{
-			foreach (var victim in world.FindActorsInCircle(pos, VictimScanRadius))
+			var victims = VictimScanRadiusIn3d
+				? world.FindActorsInSphere(pos, VictimScanRadius)
+				: world.FindActorsInCircle(pos, VictimScanRadius);
+
+			foreach (var victim in victims)
 			{
 				if (checkTargetType && !IsValidAgainst(victim, firedBy))
 					continue;

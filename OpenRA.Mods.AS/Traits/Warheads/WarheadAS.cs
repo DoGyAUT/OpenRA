@@ -22,6 +22,9 @@ namespace OpenRA.Mods.AS.Warheads
 		"These warheads check for the Air TargetType when detonated inair!")]
 	public abstract class WarheadAS : Warhead, IRulesetLoaded<WeaponInfo>
 	{
+		[Desc("Calculate the victim scan radius in 3d instead of ignoring the height of potential targets.")]
+		public readonly bool VictimScanRadiusIn3d;
+
 		[Desc("Extra search radius beyond maximum spread. If set to zero (default), it will automatically scale to the largest health shape.",
 			"Custom overrides should not be necessary under normal circumstances.")]
 		public WDist VictimScanRadius = WDist.Zero;
@@ -47,7 +50,11 @@ namespace OpenRA.Mods.AS.Warheads
 
 		public bool GetDirectHit(World world, CPos cell, WPos pos, Actor firedBy, bool checkTargetType = false)
 		{
-			foreach (var victim in world.FindActorsInCircle(pos, VictimScanRadius))
+			var victims = VictimScanRadiusIn3d
+				? world.FindActorsInSphere(pos, VictimScanRadius)
+				: world.FindActorsInCircle(pos, VictimScanRadius);
+
+			foreach (var victim in victims)
 			{
 				if (checkTargetType && !IsValidAgainst(victim, firedBy))
 					continue;

@@ -36,6 +36,9 @@ namespace OpenRA.GameRules
 
 	public sealed class WeaponInfo
 	{
+		[Desc("Calculate range in 3d instead of ignoring the height of potential targets.")]
+		public readonly bool RangeIn3d;
+
 		[Desc("The maximum range the weapon can fire.")]
 		public readonly WDist Range = WDist.Zero;
 

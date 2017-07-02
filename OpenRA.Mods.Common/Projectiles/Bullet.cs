@@ -55,6 +55,9 @@ namespace OpenRA.Mods.Common.Projectiles
 		[Desc("Is this blocked by actors with BlocksProjectiles trait.")]
 		public readonly bool Blockable = true;
 
+		[Desc("Calculate width in 3d instead of ignoring the height of potential targets.")]
+		public readonly bool WidthIn3d;
+
 		[Desc("Width of projectile (used for finding blocking actors).")]
 		public readonly WDist Width = new WDist(1);
 
@@ -295,7 +298,11 @@ namespace OpenRA.Mods.Common.Projectiles
 
 		bool AnyValidTargetsInRadius(World world, WPos pos, WDist radius, Actor firedBy, bool checkTargetType)
 		{
-			foreach (var victim in world.FindActorsInCircle(pos, radius))
+			var victims = info.WidthIn3d
+				? world.FindActorsInSphere(pos, radius)
+				: world.FindActorsInCircle(pos, radius);
+
+			foreach (var victim in victims)
 			{
 				if (checkTargetType && !Target.FromActor(victim).IsValidFor(firedBy))
 					continue;

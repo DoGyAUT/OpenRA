@@ -22,8 +22,11 @@ namespace OpenRA.Mods.Common.Warheads
 		[Desc("Range between falloff steps.")]
 		public readonly WDist Spread = new WDist(43);
 
-		[Desc("Damage percentage at each range step")]
+		[Desc("Damage percentage at each range step.")]
 		public readonly int[] Falloff = { 100, 37, 14, 5, 0 };
+
+		[Desc("Calculate range in 3d instead of ignoring the height of potential targets.")]
+		public readonly bool RangeIn3d;
 
 		[Desc("Ranges at which each Falloff step is defined. Overrides Spread.")]
 		public WDist[] Range = null;
@@ -63,7 +66,9 @@ namespace OpenRA.Mods.Common.Warheads
 
 			// This only finds actors where the center is within the search radius,
 			// so we need to search beyond the maximum spread to account for actors with large health radius
-			var hitActors = world.FindActorsInCircle(pos, Range[Range.Length - 1] + VictimScanRadius);
+			var hitActors = RangeIn3d
+				? world.FindActorsInSphere(pos, Range[Range.Length - 1] + VictimScanRadius)
+				: world.FindActorsInCircle(pos, Range[Range.Length - 1] + VictimScanRadius);
 
 			foreach (var victim in hitActors)
 			{
