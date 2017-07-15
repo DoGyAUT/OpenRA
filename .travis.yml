@@ -42,34 +42,33 @@ script:
 
 # Automatically update the trait documentation and Lua API
 after_success:
- - test $TRAVIS_PULL_REQUEST == "false" && make docs && cd packaging && ./update-wiki.sh $TRAVIS_BRANCH; cd ..
+ - test $TRAVIS_PULL_REQUEST == "false" && cd packaging && ./update-wiki.sh $TRAVIS_BRANCH; cd ..
 
 # Only watch the development branch and tagged release.
 branches:
  only:
-  - master
+   - /^cd-release-.*$/
+   - cd
+   - /.*/ # Build everything.
 
 # Notify developers when build passed/failed.
 notifications:
-  webhooks: http://attsup.swr-productions.com/travis-ci/travis-ci.php
 
+before_deploy:
+ - export PATH=$PATH:$HOME/usr/bin
+ - DOTVERSION=`echo ${TRAVIS_TAG} | sed "s/-/\\./g"`
+ - cd packaging
+ - mkdir build
+ - ./package-all.sh ${TRAVIS_TAG} ${PWD}/build/
+deploy:
+  provider: releases
+  api_key:
+    secure: r2rrEgFiaKVA6EQuQygD0rmN0hdIcg5dT4E2ycJ6G9Rh9YG8JTnF7NFLVqBZ6P9pXrPJT/d1+QgiZApWcET78why54YdT0nEoDU2aF+u0h02DjVnjTGnP6kYn3GHigj8LaAWfg/kxKJ3xajc48DHKUsHfXCWYg2fW0ZnO8Y4aEfRcO5xZg1c9W8XEyyhbmiNCjCmruZAPb6BaTI0ts1Dv76DFeAULSmagQp8w+GJAOco05yrayeLaCugbQvqEXu/IlmgOOCWzILgVywdNZlx8lxTDFqV9Zd3EMxl36LugfE67dsa2O5nyb7XaUwYjQyXUklOjzp3BccCtMBtnmyN42UeHF4wTcwYKhlM752pAm9AIF4sqnorsj7wlq9MZDQ2O46bWRQYpRuvvkeMhbcrbqngz7qzqFwXSg2kvFW6kItdxvSBcAQHCK1BkBAkiQ90Q0qJENgxmpzz1qiXH3T80+FLKFWAE+hx8Ao0CCOFpa+FC+RhYc9nrklyHIcoPIkvOHECTmyurDaVDholRpEY9ir8uxroYrTtsdMEGVmfvTsU08Jz6RkDuDYT56vM2XDDvt/cEEZboLNX2SFOe3RtvldoVeOx0TCIkrj+F4XNZfY93T6s9uwZyJXYCneprkm26UHGVVAPv5Em5ZsHMZk0OPHoTImVG5z/BrvfnrPGISA=
+  file:
+    - build/OpenRA-${TRAVIS_TAG}.zip
+  skip_cleanup: true
+  on:
+    all_branches: true
+    tags: true
+    repo: DoGyAUT/OpenRA
 
-#before_deploy:
-# - export PATH=$PATH:$HOME/usr/bin
-# - DOTVERSION=`echo ${TRAVIS_TAG} | sed "s/-/\\./g"`
-# - cd packaging
-# - mkdir build
-# - ./package-all.sh ${TRAVIS_TAG} ${PWD}/build/
-#deploy:
-#  provider: releases
-#  api_key:
-#    secure:
-#  file:
-#    - build/OpenRA-${TRAVIS_TAG}.exe
-#    - build/OpenRA-${TRAVIS_TAG}.dmg
-#    - build/openra_${DOTVERSION}_all.deb
-#  skip_cleanup: true
-#  on:
-#    all_branches: true
-#    tags: true
-#    repo: AttacqueSuperior/Engine
