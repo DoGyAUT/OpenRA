@@ -17,6 +17,9 @@ namespace OpenRA.Mods.AS.Warheads
 	[Desc("Grants promotion to actors.")]
 	public class PromotionWarhead : WarheadAS
 	{
+		[Desc("Calculate range in 3d instead of ignoring the height of potential targets.")]
+		public readonly bool RangeIn3d;
+
 		[Desc("Range of targets to be promoted.")]
 		public readonly WDist Range = new WDist(2048);
 
@@ -31,7 +34,9 @@ namespace OpenRA.Mods.AS.Warheads
 			if (!IsValidImpact(target.CenterPosition, firedBy))
 				return;
 
-			var availableActors = firedBy.World.FindActorsInCircle(target.CenterPosition, Range);
+			var availableActors = RangeIn3d
+				? firedBy.World.FindActorsInSphere(target.CenterPosition, Range)
+				: firedBy.World.FindActorsInCircle(target.CenterPosition, Range);
 
 			foreach (var a in availableActors)
 			{

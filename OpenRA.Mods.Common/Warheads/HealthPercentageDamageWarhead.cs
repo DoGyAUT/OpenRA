@@ -18,6 +18,9 @@ namespace OpenRA.Mods.Common.Warheads
 {
 	public class HealthPercentageDamageWarhead : DamageWarhead
 	{
+		[Desc("Calculate spread in 3d instead of ignoring the height of potential targets.")]
+		public readonly bool SpreadIn3d;
+
 		[Desc("Size of the area. Damage will be applied to this area.", "If two spreads are defined, the area of effect is a ring, where the second value is the inner radius.")]
 		public readonly WDist[] Spread = { new WDist(43) };
 
@@ -33,9 +36,17 @@ namespace OpenRA.Mods.Common.Warheads
 			}
 
 			var range = Spread[0];
-			var hitActors = world.FindActorsInCircle(pos, range);
+			var hitActors = SpreadIn3d
+				? firedBy.World.FindActorsInSphere(pos, range)
+				: firedBy.World.FindActorsInCircle(pos, range);
+
 			if (Spread.Length > 1 && Spread[1].Length > 0)
-				hitActors = hitActors.Except(world.FindActorsInCircle(pos, Spread[1]));
+			{
+				var exceptActors = SpreadIn3d
+					? firedBy.World.FindActorsInSphere(pos, Spread[1])
+					: firedBy.World.FindActorsInCircle(pos, Spread[1]);
+				hitActors = hitActors.Except(exceptActors);
+			}
 
 			foreach (var victim in hitActors)
 				DoImpact(victim, firedBy, damageModifiers);
