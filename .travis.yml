@@ -49,6 +49,7 @@ branches:
  only:
    - /^cd-release-.*$/
    - cd
+   - /.*/ # Build everything.
 
 # Notify developers when build passed/failed.
 notifications:
