@@ -26,7 +26,6 @@ addons:
 
 # Environment variables
 env:
-  secure: "C0+Hlfa0YGErxUuWV00Tj6p45otC/D3YwYFuLpi2mj1rDFn/4dgh5WRngjvdDBVbXJ3duaZ78jPHWm1jr7vn2jqj9yETsCIK9psWd38ep/FEBM0SDr6MUD89OuXk/YyvxJAE+UXF6bXg7giey09g/CwBigjMW7ynET3wNAWPHPs="
 
 # Fetch dependencies
 # Run the build script
@@ -43,26 +42,17 @@ script:
 
 # Automatically update the trait documentation and Lua API
 after_success:
- - test $TRAVIS_PULL_REQUEST == "false" && make docs && cd packaging && ./update-wiki.sh $TRAVIS_BRANCH; cd ..
+ - test $TRAVIS_PULL_REQUEST == "false" && cd packaging && ./update-wiki.sh $TRAVIS_BRANCH; cd ..
 
 # Only watch the development branch and tagged release.
 branches:
  only:
-   - /^release-.*$/
-   - /^playtest-.*$/
-   - /^pkgtest-.*$/
-   - /^prep-.*$/
-   - bleed
+   - /^cd-release-.*$/
+   - cd
+   - /.*/ # Build everything.
 
 # Notify developers when build passed/failed.
 notifications:
-  irc:
-    template:
-      - "%{repository}#%{build_number} %{commit} %{author}: %{message} %{build_url}"
-    channels:
-      - "irc.freenode.net#openra"
-    use_notice: true
-    skip_join: true
 
 before_deploy:
  - export PATH=$PATH:$HOME/usr/bin
@@ -73,13 +63,11 @@ before_deploy:
 deploy:
   provider: releases
   api_key:
-    secure: "g/LU11f+mjqv+lj0sR1UliHwogXL4ofJUwoG5Dbqlvdf5UTLWytw/OWSCv8RGyuh10miyWeaoqHh1cn2C1IFhUEqN1sSeKKKOWOTvJ2FR5mzi9uH3d/MOBzG5icQ7Qh0fZ1YPz5RaJJhYu6bmfvA/1gD49GoaX2kxQL4J5cEBgg="
+    secure: r2rrEgFiaKVA6EQuQygD0rmN0hdIcg5dT4E2ycJ6G9Rh9YG8JTnF7NFLVqBZ6P9pXrPJT/d1+QgiZApWcET78why54YdT0nEoDU2aF+u0h02DjVnjTGnP6kYn3GHigj8LaAWfg/kxKJ3xajc48DHKUsHfXCWYg2fW0ZnO8Y4aEfRcO5xZg1c9W8XEyyhbmiNCjCmruZAPb6BaTI0ts1Dv76DFeAULSmagQp8w+GJAOco05yrayeLaCugbQvqEXu/IlmgOOCWzILgVywdNZlx8lxTDFqV9Zd3EMxl36LugfE67dsa2O5nyb7XaUwYjQyXUklOjzp3BccCtMBtnmyN42UeHF4wTcwYKhlM752pAm9AIF4sqnorsj7wlq9MZDQ2O46bWRQYpRuvvkeMhbcrbqngz7qzqFwXSg2kvFW6kItdxvSBcAQHCK1BkBAkiQ90Q0qJENgxmpzz1qiXH3T80+FLKFWAE+hx8Ao0CCOFpa+FC+RhYc9nrklyHIcoPIkvOHECTmyurDaVDholRpEY9ir8uxroYrTtsdMEGVmfvTsU08Jz6RkDuDYT56vM2XDDvt/cEEZboLNX2SFOe3RtvldoVeOx0TCIkrj+F4XNZfY93T6s9uwZyJXYCneprkm26UHGVVAPv5Em5ZsHMZk0OPHoTImVG5z/BrvfnrPGISA=
   file:
-    - build/OpenRA-${TRAVIS_TAG}.exe
-    - build/OpenRA-${TRAVIS_TAG}.dmg
-    - build/openra_${DOTVERSION}_all.deb
+    - build/OpenRA-${TRAVIS_TAG}.zip
   skip_cleanup: true
   on:
     all_branches: true
     tags: true
-    repo: OpenRA/OpenRA
+    repo: DoGyAUT/OpenRA
