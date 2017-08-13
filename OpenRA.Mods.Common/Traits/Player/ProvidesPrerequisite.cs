@@ -15,7 +15,7 @@ using OpenRA.Traits;
 
 namespace OpenRA.Mods.Common.Traits
 {
-	public class ProvidesPrerequisiteInfo : ITechTreePrerequisiteInfo
+	public class ProvidesPrerequisiteInfo : ConditionalTraitInfo, ITechTreePrerequisiteInfo
 	{
 		[Desc("The prerequisite type that this provides. If left empty it defaults to the actor's name.")]
 		public readonly string Prerequisite = null;
@@ -28,19 +28,18 @@ namespace OpenRA.Mods.Common.Traits
 
 		[Desc("Should it recheck everything when it is captured?")]
 		public readonly bool ResetOnOwnerChange = false;
-		public object Create(ActorInitializer init) { return new ProvidesPrerequisite(init, this); }
+		public override object Create(ActorInitializer init) { return new ProvidesPrerequisite(init, this); }
 	}
 
-	public class ProvidesPrerequisite : ITechTreePrerequisite, INotifyOwnerChanged
+	public class ProvidesPrerequisite : ConditionalTrait<ProvidesPrerequisiteInfo>, ITechTreePrerequisite, INotifyOwnerChanged
 	{
-		readonly ProvidesPrerequisiteInfo info;
 		readonly string prerequisite;
 
 		bool enabled = true;
 
 		public ProvidesPrerequisite(ActorInitializer init, ProvidesPrerequisiteInfo info)
+			: base(info)
 		{
-			this.info = info;
 			prerequisite = info.Prerequisite;
 
 			if (string.IsNullOrEmpty(prerequisite))
@@ -64,19 +63,37 @@ namespace OpenRA.Mods.Common.Traits
 
 		public void OnOwnerChanged(Actor self, Player oldOwner, Player newOwner)
 		{
-			if (info.ResetOnOwnerChange)
+			if (Info.ResetOnOwnerChange)
 				Update(newOwner, newOwner.Faction.InternalName);
 		}
 
 		void Update(Player owner, string faction)
 		{
+			if (IsTraitDisabled)
+			{
+				enabled = false;
+				return;
+			}
+
 			enabled = true;
 
-			if (info.Factions.Any())
-				enabled = info.Factions.Contains(faction);
+			if (Info.Factions.Any())
+				enabled = Info.Factions.Contains(faction);
 
-			if (info.RequiresPrerequisites.Any() && enabled)
-				enabled = owner.PlayerActor.Trait<TechTree>().HasPrerequisites(info.RequiresPrerequisites);
+			if (Info.RequiresPrerequisites.Any() && enabled)
+				enabled = owner.PlayerActor.Trait<TechTree>().HasPrerequisites(Info.RequiresPrerequisites);
+		}
+
+		protected override void TraitEnabled(Actor self)
+		{
+			Update(self.Owner, self.Owner.Faction.InternalName);
+			self.Owner.PlayerActor.Trait<TechTree>().ActorChanged(self);
+		}
+
+		protected override void TraitDisabled(Actor self)
+		{
+			Update(self.Owner, self.Owner.Faction.InternalName);
+			self.Owner.PlayerActor.Trait<TechTree>().ActorChanged(self);
 		}
 	}
 }
