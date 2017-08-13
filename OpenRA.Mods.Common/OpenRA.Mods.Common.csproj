@@ -818,6 +818,7 @@
     <Compile Include="Traits\Conditions\GrantConditionOnBotOwner.cs" />
     <Compile Include="Traits\Render\ReloadArmamentsBar.cs" />
     <Compile Include="Traits\Conditions\GrantConditionOnLowPower.cs" />
+    <Compile Include="Lint\CheckChromeHotkeys.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
